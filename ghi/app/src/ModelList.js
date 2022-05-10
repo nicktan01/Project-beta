@@ -1,4 +1,4 @@
-function ManufacturerList(props) {
+function ModelList(props) {
     console.log(props);
   return (
     <table className="table table-striped">
@@ -8,10 +8,11 @@ function ManufacturerList(props) {
             </tr>
         </thead>
         <tbody>
-            {props.manufacturers.map(manufacturer => {
+            {props.models.map(model => {
                 return (
-                    <tr key={manufacturer.href}>
-                        <td>{ manufacturer.name }</td>
+                    <tr key={model.name}>
+                        <td>{ model.name }</td>
+                        <td>{ model.picture_url }</td>
                     </tr>
                 );
             })}
@@ -20,4 +21,4 @@ function ManufacturerList(props) {
   )
 }
 
-export default ManufacturerList;
+export default ModelList;
