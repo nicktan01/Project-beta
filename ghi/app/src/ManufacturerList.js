@@ -11,8 +11,9 @@ function ManufacturerList(props) {
         </thead>
         <tbody>
             {props.manufacturers.map(manufacturer => {
+                console.log("Where is my name?", manufacturer)
                 return (
-                    <tr key={manufacturer.href}>
+                    <tr key={manufacturer.id}>
                         <td>{ manufacturer.name }</td>
                     </tr>
                 );

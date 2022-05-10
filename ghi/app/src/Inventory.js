@@ -3,7 +3,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 function Inventory() {
   return (
       <>
-        <h1>Hello</h1>
+        <h1>Inventory</h1>
         <Outlet />
       </>
   )
