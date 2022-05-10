@@ -22,7 +22,7 @@ function ManufacturerList(props) {
                 })}
             </tbody>
         </table>
-        <ManufacturerForm />
+        <ManufacturerForm loadManufacturer={props.loadManufacturer}/>
     </React.Fragment>
   )
 }

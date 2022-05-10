@@ -11,9 +11,47 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      manufacturers: [],
+      models: [],
+      automobiles: [],
     };
 
+    this.loadManufacturer = this.loadManufacturer.bind(this);
+    this.loadModel = this.loadModel.bind(this);
+    this.loadAutomobiles = this.loadAutomobiles.bind(this);
+
+  }
+  async componentDidMount(){
+    this.loadManufacturer();
+    this.loadModel();
+    this.loadAutomobiles();
+  }
+  async loadManufacturer(){
+    const response = await fetch('http://localhost:8100/api/manufacturers/');
+    if(response.ok) {
+      const data = await response.json();
+      this.setState({
+        manufacturers: data.manufacturers
+      });
+    }
+  }
+  async loadModel(){
+    const response = await fetch('http://localhost:8100/api/models/');
+    if(response.ok) {
+      const data = await response.json();
+      this.setState({
+        models: data.models
+      });
+    }
+  }
+  async loadAutomobiles(){
+    const response = await fetch('http://localhost:8100/api/automobiles/');
+    if(response.ok) {
+      const data = await response.json();
+      this.setState({
+        automobiles: data.autos
+      });
+    }
   }
   render(){
     return (
@@ -23,9 +61,9 @@ class App extends React.Component {
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="inventory" element={<Inventory />} >
-              <Route path="manufacturers" element={<ManufacturerList manufacturers={this.props.manufacturers}/>} />
-              <Route path="models" element={<ModelList models={this.props.models}/>} />
-              <Route path="automobiles" element={<AutomobileList automobiles={this.props.automobiles}/>} />
+              <Route path="manufacturers" element={<ManufacturerList manufacturers={this.state.manufacturers} loadManufacturer={this.loadManufacturer}/>} />
+              <Route path="models" element={<ModelList models={this.state.models} manufacturers={this.state.manufacturers} loadModel={this.loadModel}/>} />
+              <Route path="automobiles" element={<AutomobileList automobiles={this.state.automobiles}/>} />
             </Route>
           </Routes>
         </div>
