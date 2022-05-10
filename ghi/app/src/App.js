@@ -5,31 +5,34 @@ import Inventory from './Inventory';
 import ManufacturerList from './ManufacturerList';
 import ModelList from './ModelList';
 import AutomobileList from './AutomobileList';
+import React from 'react'; 
 
-function App(props) {
-  // if (props.manufacturers === undefined) {
-  //   console.log("got no manufacturers");
-  //   return [];
-  // }
-  // if (props.models === undefined) {
-  //   console.log("got no models");
-  //   return [];
-  // }
-  return (
-    <BrowserRouter>
-      <Nav />
-      <div className="container">
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="inventory" element={<Inventory />} >
-            <Route path="manufacturers" element={<ManufacturerList manufacturers={props.manufacturers}/>} />
-            <Route path="models" element={<ModelList models={props.models}/>} />
-            <Route path="automobiles" element={<AutomobileList automobiles={props.automobiles}/>} />
-          </Route>
-        </Routes>
-      </div>
-    </BrowserRouter>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    };
+
+  }
+  render(){
+    return (
+      <BrowserRouter>
+        <Nav />
+        <div className="container">
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="inventory" element={<Inventory />} >
+              <Route path="manufacturers" element={<ManufacturerList manufacturers={this.props.manufacturers}/>} />
+              <Route path="models" element={<ModelList models={this.props.models}/>} />
+              <Route path="automobiles" element={<AutomobileList automobiles={this.props.automobiles}/>} />
+            </Route>
+          </Routes>
+        </div>
+      </BrowserRouter>
+    );
+    
+  }
 }
 
 export default App;
