@@ -18,13 +18,13 @@ class App extends React.Component {
 
     this.loadManufacturer = this.loadManufacturer.bind(this);
     this.loadModel = this.loadModel.bind(this);
-    this.loadAutomobiles = this.loadAutomobiles.bind(this);
+    this.loadAutomobile = this.loadAutomobile.bind(this);
 
   }
   async componentDidMount(){
     this.loadManufacturer();
     this.loadModel();
-    this.loadAutomobiles();
+    this.loadAutomobile();
   }
   async loadManufacturer(){
     const response = await fetch('http://localhost:8100/api/manufacturers/');
@@ -44,7 +44,7 @@ class App extends React.Component {
       });
     }
   }
-  async loadAutomobiles(){
+  async loadAutomobile(){
     const response = await fetch('http://localhost:8100/api/automobiles/');
     if(response.ok) {
       const data = await response.json();
@@ -63,7 +63,7 @@ class App extends React.Component {
             <Route path="inventory" element={<Inventory />} >
               <Route path="manufacturers" element={<ManufacturerList manufacturers={this.state.manufacturers} loadManufacturer={this.loadManufacturer}/>} />
               <Route path="models" element={<ModelList models={this.state.models} manufacturers={this.state.manufacturers} loadModel={this.loadModel}/>} />
-              <Route path="automobiles" element={<AutomobileList automobiles={this.state.automobiles}/>} />
+              <Route path="automobiles" element={<AutomobileList automobiles={this.state.automobiles} models={this.state.models} loadAutomobile={this.loadAutomobile}/>} />
             </Route>
           </Routes>
         </div>
