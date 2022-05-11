@@ -3,10 +3,14 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 import json
 from common.json import ModelEncoder
-from .models import ServiceAppointment, Technician
+from .models import ServiceAppointment, Technician, AutomobileVO
 
 # Create your views here.
-
+class AutomobileVOEncoder(ModelEncoder):
+    model = AutomobileVO
+    properties = [
+        "import_href", "color", "year", "vin"
+    ]
 class TechnicianEncoder(ModelEncoder):
     model = Technician
     properties = [
@@ -19,14 +23,14 @@ class AppointmentEncoder(ModelEncoder):
     model = ServiceAppointment
     properties = [
         "id",
-        "vin",
-        "date",
-        "time",
+        "automobile",
+        "date_time",
         "technician",
         "reason"
     ]
     encoders = {
         "technician": TechnicianEncoder(),
+        "automobile": AutomobileVOEncoder(),
     }
 
 @require_http_methods(["GET", "POST"])
@@ -109,9 +113,15 @@ def api_service_appointments(request):
     else:
         try:
             content = json.loads(request.body)
+            vin = content["vin"]
+            automobile = AutomobileVO.objects.get(vin=vin)
+            content["automobile"] = automobile
             employee_number = content["employee_number"]
             technician = Technician.objects.get(employee_number=employee_number)
             content["technician"] = technician
+            del content["vin"]
+            del content["employee_number"]
+            print("CONTENT", content)
             model = ServiceAppointment.objects.create(**content)
             return JsonResponse(
                 model,
@@ -170,3 +180,17 @@ def api_service_appointment(request, vin):
             response = JsonResponse({"message": "Does not exist"})
             response.status_code = 404
             return response
+
+@require_http_methods(["POST"])
+def api_service_history(request):
+        try:
+            content = json.loads(request.body)
+            vin = content["vin"]
+            automobile = AutomobileVO.objects.get(vin=vin)
+            services = ServiceAppointment.objects.filter(automobile=automobile)
+            return JsonResponse(
+                {"services": services},
+                encoder=AppointmentEncoder,
+            )
+        except ServiceAppointment.DoesNotExist:
+            return JsonResponse({"message": "Appointment does not exist"})
