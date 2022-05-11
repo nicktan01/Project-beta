@@ -5,7 +5,9 @@ import Inventory from './Inventory';
 import ManufacturerList from './ManufacturerList';
 import ModelList from './ModelList';
 import AutomobileList from './AutomobileList';
+import TechnicianList from './TechnicianList';
 import React from 'react'; 
+import TechnicianForm from './TechnicianForm';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,17 +16,20 @@ class App extends React.Component {
       manufacturers: [],
       models: [],
       automobiles: [],
+      technicians: [],
     };
 
     this.loadManufacturer = this.loadManufacturer.bind(this);
     this.loadModel = this.loadModel.bind(this);
     this.loadAutomobile = this.loadAutomobile.bind(this);
+    this.loadTechnician = this.loadTechnician.bind(this);
 
   }
   async componentDidMount(){
     this.loadManufacturer();
     this.loadModel();
     this.loadAutomobile();
+    this.loadTechnician();
   }
   async loadManufacturer(){
     const response = await fetch('http://localhost:8100/api/manufacturers/');
@@ -53,6 +58,15 @@ class App extends React.Component {
       });
     }
   }
+  async loadTechnician (){
+    const response = await fetch('http://localhost:8080/api/technicians/');
+    if(response.ok) {
+      const data = await response.json();
+      this.setState({
+        technicians: data.technicians
+      });
+    }
+  }
   render(){
     return (
       <BrowserRouter>
@@ -60,10 +74,14 @@ class App extends React.Component {
         <div className="container">
           <Routes>
             <Route path="/" element={<MainPage />} />
-            <Route path="inventory" element={<Inventory />} >
+            <Route path="inventory">
               <Route path="manufacturers" element={<ManufacturerList manufacturers={this.state.manufacturers} loadManufacturer={this.loadManufacturer}/>} />
               <Route path="models" element={<ModelList models={this.state.models} manufacturers={this.state.manufacturers} loadModel={this.loadModel}/>} />
               <Route path="automobiles" element={<AutomobileList automobiles={this.state.automobiles} models={this.state.models} loadAutomobile={this.loadAutomobile}/>} />
+            </Route>
+            <Route path="technicians">
+              <Route index element={<TechnicianList technicians={this.state.technicians} />}/>
+              <Route path="new" element={<TechnicianForm />}/>
             </Route>
           </Routes>
         </div>
