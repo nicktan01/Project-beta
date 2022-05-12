@@ -6,8 +6,11 @@ import ManufacturerList from './ManufacturerList';
 import ModelList from './ModelList';
 import AutomobileList from './AutomobileList';
 import TechnicianList from './TechnicianList';
-import React from 'react'; 
 import TechnicianForm from './TechnicianForm';
+import AppointmentList from './AppointmentList';
+import AppointmentForm from './AppointmentForm';
+import React from 'react'; 
+
 
 class App extends React.Component {
   constructor(props) {
@@ -17,12 +20,14 @@ class App extends React.Component {
       models: [],
       automobiles: [],
       technicians: [],
+      appointments: [],
     };
 
     this.loadManufacturer = this.loadManufacturer.bind(this);
     this.loadModel = this.loadModel.bind(this);
     this.loadAutomobile = this.loadAutomobile.bind(this);
     this.loadTechnician = this.loadTechnician.bind(this);
+    this.loadAppointment = this.loadAppointment.bind(this);
 
   }
   async componentDidMount(){
@@ -30,6 +35,7 @@ class App extends React.Component {
     this.loadModel();
     this.loadAutomobile();
     this.loadTechnician();
+    this.loadAppointment();
   }
   async loadManufacturer(){
     const response = await fetch('http://localhost:8100/api/manufacturers/');
@@ -67,6 +73,15 @@ class App extends React.Component {
       });
     }
   }
+  async loadAppointment(){
+    const response = await fetch('http://localhost:8080/api/appointments/');
+    if(response.ok) {
+      const data = await response.json();
+      this.setState({
+        appointments: data.appointments
+      });
+    }
+  }
   render(){
     return (
       <BrowserRouter>
@@ -82,6 +97,10 @@ class App extends React.Component {
             <Route path="technicians">
               <Route index element={<TechnicianList technicians={this.state.technicians} />}/>
               <Route path="new" element={<TechnicianForm />}/>
+            </Route>
+            <Route path="appointments">
+              <Route index element={<AppointmentList appointments={this.state.appointments} />}/>
+              <Route path="new" element={<AppointmentForm />}/>
             </Route>
           </Routes>
         </div>

@@ -76,7 +76,7 @@ class AppointmentForm extends React.Component {
             <div className="row">
               <div className="offset-3 col-6">
                 <div className="shadow p-4 mt-4">
-                  <h1>Add Technician</h1>
+                  <h1>Add Appointment</h1>
                   <form onSubmit={this.handleSubmit} id="create-conference-form">
                     <div className="form-floating mb-3">
                       <input onChange={this.handleVINChange} value={this.state.vin} placeholder="VIN" required type="text" name="vin" id="vin" className="form-control" />
@@ -94,9 +94,17 @@ class AppointmentForm extends React.Component {
                       <input onChange={this.handleTimeChange} value={this.state.time} placeholder="Time" required type="time" name="time" className="form-control" />
                       <label htmlFor="time">Time</label>
                     </div>
-                    <div className="form-floating mb-3">
-                      <input onChange={this.handleTechnicianChange} value={this.state.technician} placeholder="Technician" required type="technician" name="technician" className="form-control" />
-                      <label htmlFor="technician">Technician</label>
+                    <div className="mb-3">
+                      <select onChange={this.handleTechnicianChange} value={this.state.technician} placeholder="Technician" required type="technician" name="technician" className="form-control">
+                        <option value="">Choose a technician</option>
+                        {this.props.technicians.map(technician => {
+                            return(
+                                <option key={technician.id} value={technician.id}>
+                                    {technician.name}
+                                </option>
+                            )
+                        })}
+                      </select>
                     </div>
                     <div className="form-floating mb-3">
                       <input onChange={this.handleReasonChange} value={this.state.reason} placeholder="Reason" required type="reason" name="reason" className="form-control" />
@@ -110,3 +118,5 @@ class AppointmentForm extends React.Component {
           );
     }
 }
+
+export default AppointmentForm;
