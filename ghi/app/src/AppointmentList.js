@@ -30,7 +30,49 @@ function formatTime(date_time){
         timeObj.getHours()
     )
 }
+function cancelClick(event){
+    event.preventDefault();
 
+    const url = `http://localhost:8080/api/appointments/${this.id}/`
+    const fetchConfig = {
+        method: "delete",
+        headers:{
+            'Content-Type': 'application/json',
+        },
+    };
+
+    const response = fetch(url, fetchConfig);
+    if(response.ok) {
+        const newAppointment = response.json();
+        console.log(newAppointment)
+
+        let remainingAppointments = []
+        for (let i = 0; i < this.state.appointments.length; i++){
+            let currentAppointment = this.state.appointments[i]
+            if(parseInt(this.state.appointment) !== currentAppointment.id) {
+                remainingAppointments.push(currentAppointment)
+            }
+        }
+        this.setState({
+            appointment: '',
+            appointments: remainingAppointments
+        })
+    }
+}
+async function finishedClick(service){
+    console.log(service)
+    const url = `http://localhost:8080/api/appointments/${service.id}/finished/`
+    const fetchConfig = {
+        method: "put",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+    const response = await fetch(url, fetchConfig);
+    if(response.ok){
+        console.log("this is the response", response)
+    }
+}
 function AppointmentList(props) {
     console.log(props);
   return (
@@ -48,16 +90,25 @@ function AppointmentList(props) {
             </thead>
             <tbody>
                 {props.appointments.map(appointment => {
-                    return (
-                        <tr key={appointment.automobile.vin}>
-                            <td>{ appointment.automobile.vin }</td>
-                            <td>{ appointment.customer }</td>
-                            <td>{ formatDate(appointment.date_time) }</td>
-                            <td>{ formatTime(appointment.date_time) }</td>
-                            <td>{ appointment.technician.name }</td>
-                            <td>{ appointment.reason }</td>
-                        </tr>
-                    );
+                    if(appointment.status === "IN_PROGRESS"){
+                        return (
+                            <tr key={appointment.id}>
+                                <td>{ appointment.automobile.vin }</td>
+                                <td>{ appointment.customer }</td>
+                                <td>{ formatDate(appointment.date_time) }</td>
+                                <td>{ formatTime(appointment.date_time) }</td>
+                                <td>{ appointment.technician.name }</td>
+                                <td>{ appointment.reason }</td>
+                                <td>
+                                    <button className="btn btn-primary" onClick={cancelClick} >Cancel</button>
+                                    <button className="btn btn-primary" onClick={() => {finishedClick(appointment)}} >Finished</button>
+                                </td>
+                            </tr>
+                        );
+                    }
+                    else{
+                        return null;
+                    }
                 })}
             </tbody>
         </table>

@@ -26,4 +26,14 @@ class ServiceAppointment(models.Model):
         on_delete=models.CASCADE,
     )
     reason = models.CharField(max_length=200)
-
+    status = models.CharField(max_length=100, default="IN_PROGRESS")
+    def cancel(self):
+        status = "CANCELLED"
+        self.status = status
+        self.save()
+    def finish(self):
+        status = "FINISHED"
+        self.status = status
+        self.save()
+    def __str__(self):
+        return self.customer + " " + self.status

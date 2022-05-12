@@ -27,7 +27,8 @@ class AppointmentEncoder(ModelEncoder):
         "customer",
         "date_time",
         "technician",
-        "reason"
+        "reason",
+        "status"
     ]
     encoders = {
         "technician": TechnicianEncoder(),
@@ -138,10 +139,10 @@ def api_service_appointments(request):
             return response
 
 @require_http_methods(["DELETE", "GET", "PUT"])
-def api_service_appointment(request, vin):
+def api_service_appointment(request, id):
     if request.method == "GET":
         try:
-            appointment = ServiceAppointment.objects.get(vin=vin)
+            appointment = ServiceAppointment.objects.get(id=id)
             return JsonResponse(
                 appointment,
                 encoder=AppointmentEncoder,
@@ -153,7 +154,7 @@ def api_service_appointment(request, vin):
             return response
     elif request.method == "DELETE":
         try:
-            appointment = ServiceAppointment.objects.get(vin=vin)
+            appointment = ServiceAppointment.objects.get(id=id)
             appointment.delete()
             return JsonResponse(
                 appointment,
@@ -165,7 +166,7 @@ def api_service_appointment(request, vin):
     else: # PUT
         try:
             content = json.loads(request.body)
-            appointment = ServiceAppointment.objects.get(vin=vin)
+            appointment = ServiceAppointment.objects.get(id=id)
 
             props = ["vin", "customer", "date", "time", "technician", "reason"]
             for prop in props:
@@ -195,3 +196,22 @@ def api_service_history(request):
             )
         except ServiceAppointment.DoesNotExist:
             return JsonResponse({"message": "Appointment does not exist"})
+
+@require_http_methods(["PUT"])
+def api_cancel_appointment(request, id):
+    appointment = ServiceAppointment.objects.get(id=id)
+    appointment.cancel()
+    return JsonResponse(
+        appointment,
+        encoder=AppointmentEncoder,
+        safe=False,
+    )
+@require_http_methods(["PUT"])
+def api_finish_appointment(request, pk):
+    appointment = ServiceAppointment.objects.get(id=pk)
+    appointment.finish()
+    return JsonResponse(
+        appointment,
+        encoder=AppointmentEncoder,
+        safe=False,
+    )
