@@ -9,8 +9,8 @@ import TechnicianList from './TechnicianList';
 import TechnicianForm from './TechnicianForm';
 import AppointmentList from './AppointmentList';
 import AppointmentForm from './AppointmentForm';
-import ServiceHistoryForm from './HistoryForm';
 import React from 'react'; 
+import HistoryList from './HistoryList';
 
 
 
@@ -30,7 +30,6 @@ class App extends React.Component {
     this.loadAutomobile = this.loadAutomobile.bind(this);
     this.loadTechnician = this.loadTechnician.bind(this);
     this.loadAppointment = this.loadAppointment.bind(this);
-
   }
   async componentDidMount(){
     this.loadManufacturer();
@@ -84,9 +83,15 @@ class App extends React.Component {
       });
     }
   }
-  async loadHistory(){
-    
-  }
+  // async loadHistory(){
+  //   const response = await fetch('http://localhost:8080/api/appointments/');
+  //   if(response.ok) {
+  //     const data = await response.json();
+  //     this.setState({
+  //       history: data.history
+  //     });
+  //   }
+  // }
   render(){
     return (
       <BrowserRouter>
@@ -107,7 +112,9 @@ class App extends React.Component {
               <Route index element={<AppointmentList appointments={this.state.appointments} />}/>
               <Route path="new" element={<AppointmentForm technicians={this.state.technicians}/>}/>
             </Route>
-            <Route path="history" element={<ServiceHistoryForm />}/>
+            <Route path="history">
+              <Route index element={<HistoryList history={this.state.appointments}/>} />
+            </Route>
           </Routes>
         </div>
       </BrowserRouter>
