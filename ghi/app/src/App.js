@@ -9,7 +9,9 @@ import TechnicianList from './TechnicianList';
 import TechnicianForm from './TechnicianForm';
 import AppointmentList from './AppointmentList';
 import AppointmentForm from './AppointmentForm';
+import ServiceHistoryForm from './HistoryForm';
 import React from 'react'; 
+
 
 
 class App extends React.Component {
@@ -82,6 +84,9 @@ class App extends React.Component {
       });
     }
   }
+  async loadHistory(){
+    
+  }
   render(){
     return (
       <BrowserRouter>
@@ -100,8 +105,9 @@ class App extends React.Component {
             </Route>
             <Route path="appointments">
               <Route index element={<AppointmentList appointments={this.state.appointments} />}/>
-              <Route path="new" element={<AppointmentForm />}/>
+              <Route path="new" element={<AppointmentForm technicians={this.state.technicians}/>}/>
             </Route>
+            <Route path="history" element={<ServiceHistoryForm />}/>
           </Routes>
         </div>
       </BrowserRouter>

@@ -34,6 +34,9 @@ function Nav() {
             <li className="nav-item">
               <NavLink className="navbar-brand" to="/appointments/new">Add appointment</NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className="navbar-brand" to="/history">Search history</NavLink>
+            </li>
           </ul>
         </div>
       </div>
